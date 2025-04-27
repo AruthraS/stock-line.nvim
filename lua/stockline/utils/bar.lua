@@ -10,7 +10,7 @@ function M.Bar:new()
 	return instance
 end
 
-function M.Bar:create(ticker, exchange)
+function M.Bar:create(ticker, exchange, bgColor, fontColor)
 	local win_width = vim.o.columns
 	local win_height = api.nvim_win_get_height(0)
 
@@ -25,16 +25,24 @@ function M.Bar:create(ticker, exchange)
 	end
 
 	-- Create buffer
-	local price_fetch = require("stockline.utils.price_fetch")
-	self.buf = api.nvim_create_buf(false, true)
-	local text = price_fetch.fetch(ticker, exchange)
-	local text_length = vim.fn.strwidth("" .. text)
-	local padded_text = text .. string.rep(" ", win_width - text_length)
-	api.nvim_buf_set_lines(self.buf, 0, -1, false, { padded_text })
+	bgColor = bgColor or "#fc4103"
+	fontColor = fontColor or "#000000"
+	vim.cmd(string.format("highlight barcolor guibg=%s guifg=%s", bgColor, fontColor))
 
-	-- Highlight
-	vim.cmd("highlight barcolor guibg=#303446 guifg=#ffffff")
-	api.nvim_buf_add_highlight(self.buf, -1, "barcolor", 0, 0, -1)
+	local create_buf = function()
+		local price_fetch = require("stockline.utils.price_fetch")
+		self.buf = api.nvim_create_buf(false, true)
+		local price = price_fetch.fetch(ticker, exchange)
+		local text = ticker .. " : " .. price
+		local text_length = vim.fn.strwidth(text)
+		local space_len = win_width - text_length
+		local padded_text = string.rep(" ", space_len / 2) .. text .. string.rep(" ", space_len / 2 + space_len % 2)
+		api.nvim_buf_set_lines(self.buf, 0, -1, false, { padded_text })
+		api.nvim_buf_clear_namespace(self.buf, -1, 0, -1)
+		api.nvim_buf_add_highlight(self.buf, -1, "barcolor", 0, 0, -1)
+	end
+
+	create_buf()
 
 	-- Window
 	local window = {
@@ -53,15 +61,10 @@ function M.Bar:create(ticker, exchange)
 		self.timer = vim.loop.new_timer()
 		self.timer:start(
 			0,
-			10000,
+			30000,
 			vim.schedule_wrap(function()
 				if self.buf and api.nvim_buf_is_valid(self.buf) then
-					local new_text = price_fetch.fetch(ticker, exchange)
-					local new_text_length = vim.fn.strwidth("" .. new_text)
-					local new_padded_text = new_text .. string.rep(" ", win_width - new_text_length)
-					api.nvim_buf_set_lines(self.buf, 0, -1, false, { new_padded_text })
-					api.nvim_buf_clear_namespace(self.buf, -1, 0, -1)
-					api.nvim_buf_add_highlight(self.buf, -1, "barcolor", 0, 0, -1)
+					create_buf()
 				end
 			end)
 		)
@@ -70,7 +73,7 @@ function M.Bar:create(ticker, exchange)
 	win_create()
 	-- Autocmd
 	if not self._autocmd_created then
-		api.nvim_create_autocmd("CursorMoved", {
+		api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
 			callback = function()
 				local cursor_row, _ = unpack(api.nvim_win_get_cursor(0))
 				local win_top_line = vim.fn.line("w0")

@@ -4,6 +4,15 @@ function M.setup(opts)
 	opts = opts or {}
 	local api = vim.api
 	local bar = require("stockline.utils.bar")
+	local sys = vim.fn.system
+	local chk_pkg = function(pkg)
+		local is_present = sys("pip show " .. pkg):gsub("%s+$", "")
+		if is_present:find("WARNING") then
+			sys("pip install " .. pkg)
+		end
+	end
+	chk_pkg("requests")
+	chk_pkg("bs4")
 
 	local o = bar.Bar:new()
 
@@ -12,7 +21,7 @@ function M.setup(opts)
 			pattern = "*",
 			callback = function()
 				vim.defer_fn(function()
-					o:create(opts.ticker, opts.exchange)
+					o:create(opts.ticker, opts.exchange, opts.bgColor, opts.fontColor)
 				end, 20)
 			end,
 		})

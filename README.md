@@ -4,7 +4,8 @@ This plugin provides the stock price for the given ticker.
 
 ---
 
-## UI:  
+## UI:
+
 Everything is working fine, but UI is still under progress. I’ll have it ready by tomorrow 😉 😉!
 
 ---
@@ -16,7 +17,9 @@ Everything is working fine, but UI is still under progress. I’ll have it ready
   ```lua
   {
       ticker = "SAMPLE",
-      exchange = "SAMPLE"
+      exchange = "SAMPLE",
+      bgColor = "SAMPLE", --optional default: #fc4103
+      fontColor = "SAMPLE" --optional default: #000000
   }
   ```
 
@@ -28,4 +31,4 @@ Everything is working fine, but UI is still under progress. I’ll have it ready
 
 ---
 
-  ![Bye](https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3VtcnZ4MjEyOTFka2RmOTMzYmpjOWM5bDZlNXRwcG5xbXZtN216aSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/kiBhxDFahweefnePXf/giphy.gif)
+![Bye](https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3VtcnZ4MjEyOTFka2RmOTMzYmpjOWM5bDZlNXRwcG5xbXZtN216aSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/kiBhxDFahweefnePXf/giphy.gif)
