@@ -10,7 +10,7 @@ function M.Bar:new()
 	return instance
 end
 
-function M.Bar:create(ticker, exchange, bgColor, fontColor)
+function M.Bar:create(ticker, exchange, bgColor, fontColor, pythonExe)
 	local win_width = vim.o.columns
 	local win_height = api.nvim_win_get_height(0)
 
@@ -32,7 +32,7 @@ function M.Bar:create(ticker, exchange, bgColor, fontColor)
 	local create_buf = function()
 		local price_fetch = require("stockline.utils.price_fetch")
 		self.buf = api.nvim_create_buf(false, true)
-		local price = price_fetch.fetch(ticker, exchange)
+		local price = price_fetch.fetch(pythonExe, ticker, exchange)
 		local text = ticker .. " : " .. price
 		local text_length = vim.fn.strwidth(text)
 		local space_len = win_width - text_length

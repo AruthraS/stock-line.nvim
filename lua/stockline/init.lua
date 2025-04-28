@@ -4,15 +4,29 @@ function M.setup(opts)
 	opts = opts or {}
 	local api = vim.api
 	local bar = require("stockline.utils.bar")
-	local sys = vim.fn.system
-	local chk_pkg = function(pkg)
-		local is_present = sys("pip show " .. pkg):gsub("%s+$", "")
-		if is_present:find("WARNING") then
-			sys("pip install " .. pkg)
-		end
+	local fn = vim.fn
+	local sys = fn.system
+
+	local get_plugin_dir = function()
+		local path = debug.getinfo(1, "S").source:sub(2)
+		return fn.fnamemodify(path, ":h:h:h")
 	end
-	chk_pkg("requests")
-	chk_pkg("bs4")
+
+	local ensure_venv = function()
+		local plugin_dir = get_plugin_dir()
+		local venv_path = plugin_dir .. "/venv"
+		local is_windows = vim.loop.os_uname().version:match("Windows")
+		local python_exe = is_windows and (venv_path .. "/Scripts/python.exe") or (venv_path .. "/bin/python")
+		if fn.isdirectory(venv_path) == 0 then
+			api.nvim_out_write("Creating Virtual environment for stockline plugin")
+			sys({ "python", "-m", "venv", venv_path })
+			sys({ python_exe, "-m", "pip", "install", "requests", "beautifulsoup4" })
+			api.nvim_out_write("Created Virtual environment")
+		end
+		return python_exe
+	end
+
+	local python_exe = ensure_venv()
 
 	local o = bar.Bar:new()
 
@@ -21,7 +35,7 @@ function M.setup(opts)
 			pattern = "*",
 			callback = function()
 				vim.defer_fn(function()
-					o:create(opts.ticker, opts.exchange, opts.bgColor, opts.fontColor)
+					o:create(opts.ticker, opts.exchange, opts.bgColor, opts.fontColor, python_exe)
 				end, 20)
 			end,
 		})

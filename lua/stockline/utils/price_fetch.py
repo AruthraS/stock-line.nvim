@@ -2,6 +2,8 @@ import sys
 import requests
 from bs4 import BeautifulSoup
 
+sys.stdout.reconfigure(encoding='utf-8')
+
 def fetch(ticker, exchange):
     url = f"https://www.google.com/finance/quote/{ticker}:{exchange}"
     request = requests.get(url)
