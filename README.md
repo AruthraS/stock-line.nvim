@@ -1,33 +1,36 @@
-# Presenting the **stock-line.nvim** Plugin
+# 📈 stock-line.nvim
 
-This plugin provides the stock price for the given ticker.
-
----
-
-## UI:
-
-Everything is working fine, but UI is still under progress. I’ll have it ready by tomorrow 😉 😉!
+A no-nonsense, tea-powered Neovim plugin that beams **real-time stock prices** straight into your editor.  
+Because why should you alt-tab to check the markets when you can flex your portfolio *and* your dotfiles at the same time?
 
 ---
 
-## Some Serious Stuff
+## ⚙️ Configuration
 
-- **Provide proper opts like the following:**
+Set it up with some sweet options:
 
-  ```lua
-  {
-      ticker = "SAMPLE",
-      exchange = "SAMPLE",
-      bgColor = "SAMPLE", --optional default: #fc4103
-      fontColor = "SAMPLE" --optional default: #000000
-  }
-  ```
+```lua
+{
+    ticker = "SAMPLE",         -- 🔐 Required: Stock ticker symbol
+    exchange = "SAMPLE",       -- 🌍 Required: Stock exchange
+    bgColor = "#fc4103",       -- 🎨 Optional: Background color (default: #fc4103)
+    fontColor = "#000000"      -- 🖋️ Optional: Font color (default: #000000)
+}
+```
+---
+## 🐍 Requirements
 
-- ### Python3 is required so please install it
+- Python 3 is required.  
+Make sure it's installed and accessible via your system's PATH.  
+_Yeah, it runs on Python. Because why not?_
 
 ---
+## 🍵 Final Sip
 
-### Thanks for your **porumai en asai kothamalliye** (Translation: Thanks for your patience and support!)
+Powered by code and countless cups of tea ☕.  
+Because every good plugin deserves a good brew.
+
+If you liked this—pour yourself a hot one and enjoy the stock vibes 📈
 
 ---
 
